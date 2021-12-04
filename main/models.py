@@ -39,7 +39,7 @@ class Tenant(models.Model):
     class Meta:
         
         db_table = 'main_tenant'
-class Item(models.Model):
+class Item(models.Model): #property
     address = models.CharField(max_length=300)
     rented = models.BooleanField()
     rentprice = models.CharField(db_column='rentPrice', max_length=10)  # Field name made lowercase.
@@ -47,6 +47,8 @@ class Item(models.Model):
     bathrooms = models.CharField(max_length=5)
     propertymanagement = models.ForeignKey(Propertymanagement, on_delete = models.CASCADE, db_column='PropertyManagement_id')  # Field name made lowercase.
     tenant = models.ForeignKey(Tenant, on_delete = models.CASCADE, db_column='Tenant_id')  # Field name made lowercase.
+
+
     def __str__(self):
         return self.address
     class Meta:

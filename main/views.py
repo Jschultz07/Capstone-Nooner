@@ -12,10 +12,12 @@ def homes(response):
 def home(response):
     return render(response, "main/home.html", {})
 
-def profile(response):
-    return HttpResponse("<h1>User Profile Info -rentals locations renter etc<h1>")
+def profile(request, pk):
+    ls = Item.objects.get(id=pk)
+    return render(request, "main/profile.html", {"ls":ls })
 
 def tickets(response):
+
     return HttpResponse("<h1>All applicable trouble ticket info<h1>")
 
 def tenants(response):
