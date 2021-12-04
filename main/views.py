@@ -37,5 +37,6 @@ def newTickets(response):
     form = CreateNewTickets(response.POST or None)
     if form.is_valid():
         form.save()
+        print("Test")
 
     return render(response, "main/newTicket.html", {"form":form})
