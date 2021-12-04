@@ -6,9 +6,31 @@ from .forms import CreateNewTenants, CreateNewTickets, CreateNewProperty
 # Create your views here.
 def homes(response):
     ls = Property.objects.all()  #returns all properties to the html file. 
-    for each in ls:
-        print(f"ID ****{each.id}")
-        print(f"Rest ****{each}")
+    if response.method == "POST":
+        if response.POST.get("new"):                        # if the user selects the new button 
+            return HttpResponseRedirect("/new/property")    # redirect to the new property page and allow creation of property. 
+       
+        
+        elif response.POST.get("delete"):                   # if they enter info in txt place and it is the address in list.
+            text = response.POST.get("info")                # remove property from list. 
+            for each in ls:                                 # NOTE removes all instances that the address matches. from list.  
+                if text == each.address:
+                    Property.objects.filter(address = text).delete()
+        
+            ls = Property.objects.all()                     # when completed refresh page with updated list. 
+            return render(response, "main/properties.html", {"ls":ls})
+        
+        elif response.POST.get("save"):                                               # if not do something else. 
+            for each in ls:
+                cbinput = response.POST.get("c"+str(each.id))
+                print(f"******** Response {cbinput}")
+                if response.POST.get("c" + str(each.id)) == "rented":
+                    each.rented = True
+                else:
+                    each.rented = False
+                each.save()
+
+
     return render(response, "main/properties.html", {"ls":ls})
 
 
@@ -85,3 +107,6 @@ def newTickets(response):
 # git add .
 #git commit -m "some comment here"
 #git push origin master
+ #pw  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
+ #this submits and saves files and assets to github and local git machine
+ # !!!

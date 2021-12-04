@@ -8,13 +8,14 @@ Properties Page
 <form method="post" action="#">
     {% csrf_token %}
     <table>
-        <tr>
+        <tr style="text-align:center">
             <th>Address</th>
             <th>Rented</th>
-            <th>Bedrooms</th>
-            <th>Bathrooms</th>
-            <th>Tenant</th>
-            <th>Image</th>
+            
+            <th> Bedrooms </th>
+            <th> Bathrooms </th>
+            <th> Tenant </th>
+            <th> Image </th>
 
 
         </tr>
@@ -22,23 +23,38 @@ Properties Page
         {%for home in ls%}
 
         <tr>
-            <td> {{home.id}}</td>
             <td> {{home.address}}</td>
-            <td> {{home.rented}}</td>
-            <td> {{home.bedrooms}}</td>
-            <td> {{home.bathrooms}}</td>
+
+
+            {% if home.rented == True%}
+
+            <td><input type="checkbox" , value="rented" , name="c{{home.id}}" checked>Rented </td>
+            <td style="text-align:center"> {{home.bedrooms}}</td>
+            <td style="text-align:center"> {{home.bathrooms}}</td>
             <td> {{home.tenant}}</td>
+            {%else%}
+
+            <td><input type="checkbox" , value="rented" , name="c{{home.id}}">Available  </td>
+            <td style="text-align:center"> {{home.bedrooms}}</td>
+            <td style="text-align:center"> {{home.bathrooms}}</td>
+            <td  style="text-align:center">Vacant </>
+            {%endif%}
+
+
+
+
             <td><img src="/static/img/{{home.id}}.png" alt="Property Image" /></td>
+
 
             {%endfor%}
 
 
         </tr>
     </table>
-    <button type="submit" , name="save">Save New Property</button>
-    <button type="submit" , name="delete">Delete Property</button>
-    <button type="submit" , name="new">Create New Property</button>
-
+    <button type="submit" , name="save", value="save">Save</button>
+    <button type="submit" , name="delete", value="delete">Delete Property</button>
+    <button type="submit" , name="new", value="new">Create New Property</button>
+    <input type="text", name="info">
 
 
 </form>
