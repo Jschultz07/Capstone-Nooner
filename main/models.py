@@ -45,8 +45,8 @@ class Item(models.Model): #property
     rentprice = models.CharField(db_column='rentPrice', max_length=10)  # Field name made lowercase.
     bedrooms = models.CharField(max_length=5)
     bathrooms = models.CharField(max_length=5)
-    propertymanagement = models.ForeignKey(Propertymanagement, on_delete = models.CASCADE, db_column='PropertyManagement_id')  # Field name made lowercase.
-    tenant = models.ForeignKey(Tenant, on_delete = models.CASCADE, db_column='Tenant_id')  # Field name made lowercase.
+    propertymanagement = models.ForeignKey(Propertymanagement, on_delete = models.CASCADE, db_column='PropertyManagement_id', default = 5)  # Field name made lowercase.
+    tenant = models.ForeignKey(Tenant, on_delete = models.CASCADE, db_column='Tenant_id', default = 2)  # Field name made lowercase.
 
 
     def __str__(self):

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Ticket, Item, Tenant,Urgency, Category
+from .models import Ticket, Item as Property, Tenant,Urgency, Category
 
 
 class CreateNewTickets(forms.ModelForm):
@@ -19,9 +19,12 @@ class CreateNewTenants(forms.Form):
     pets = forms.BooleanField(required = False)
     paidrent = forms.BooleanField(required = False, label = "Current rent and deposit paid?")
 
-class CreateNewProperty(forms.Form):
+class CreateNewProperty(ModelForm):
     address = forms.CharField(label = "Address", max_length = 200)
-    rented = forms.BooleanField(label= "Currently Rented")
-    rentprice = forms.CharField(label = "Rent $", max_length = 10)
+    rented = forms.BooleanField(label= "Currently Rented", required = False)
+    rentprice = forms.CharField(label = "Rent $", max_length = 10, required = False)
     bedrooms= forms.CharField(label = "Beds", max_length = 3)
     bathrooms= forms.CharField(label = "Baths", max_length = 3)
+    class Meta:
+        model = Property 
+        fields = ['tenant'] 

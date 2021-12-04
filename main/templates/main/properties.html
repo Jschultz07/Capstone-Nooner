@@ -1,0 +1,45 @@
+{%extends 'main/base.html'%}
+
+{%block title%}
+Properties Page
+ {% endblock %}
+
+{%block content %}
+<form method="post" action="#">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Address</th>
+            <th>Rented</th>
+            <th>Bedrooms</th>
+            <th>Bathrooms</th>
+            <th>Tenant</th>
+            <th>Image</th>
+
+
+        </tr>
+
+        {%for home in ls%}
+
+        <tr>
+            <td> {{home.id}}</td>
+            <td> {{home.address}}</td>
+            <td> {{home.rented}}</td>
+            <td> {{home.bedrooms}}</td>
+            <td> {{home.bathrooms}}</td>
+            <td> {{home.tenant}}</td>
+            <td><img src="/static/img/{{home.id}}.png" alt="Property Image" /></td>
+
+            {%endfor%}
+
+
+        </tr>
+    </table>
+    <button type="submit" , name="save">Save New Property</button>
+    <button type="submit" , name="delete">Delete Property</button>
+    <button type="submit" , name="new">Create New Property</button>
+
+
+
+</form>
+    {% endblock %}
