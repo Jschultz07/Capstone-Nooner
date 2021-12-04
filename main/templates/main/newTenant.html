@@ -1,0 +1,13 @@
+{%extends 'main/base.html'%}
+{%load crispy_forms_tags%}
+{%block title%} Create New Tenant {% endblock %}
+
+{%block content %}
+Create a new Tenant.
+<form method="post" action="new/tenants">
+    {% csrf_token %}
+    {{form|crispy}}
+    <button type="submit" , name="save">Save New Tenant</button>
+
+</form>
+{% endblock %}

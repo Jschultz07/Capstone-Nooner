@@ -1,0 +1,14 @@
+{%extends 'main/base.html'%}
+{%load crispy_forms_tags%}
+{%block title%} Create New Property {% endblock %}
+
+{%block content %}
+Create a new Property.
+<form method="post" action="new/property">
+    {% csrf_token %}
+    {{form|crispy}}
+    <button type="submit" , name="save">Save New Property</button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,13 @@
+{%extends 'main/base.html'%}
+{%load crispy_forms_tags%}
+{%block title%} Create New Ticket {% endblock %}
+
+{%block content %}
+Create a new Ticket. 
+<form method="post" action="new/tickets">
+    {% csrf_token %}
+    {{form|crispy}}
+    <button type="submit" , name="save">Save New Ticket </button>
+
+</form>
+{% endblock %}
