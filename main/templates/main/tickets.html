@@ -33,22 +33,30 @@ Tickets Page
             <td> {{ticket.issue}}</td>
             <td> {{ticket.notes}}</td>
 
-            {%if ticket.pets == True%}
-            <td><input type="checkbox" , value="clicked" , name="c{{ticket.complete}}" checked>Completed </td>
+            {%if ticket.complete == True%}
+
+                {%if user.id < 4  %}
+                    <td><input type="checkbox" , value="clicked" , name="c{{ticket.ticketno}}" checked> <img src="/static/img/smiley.jpg" alt="Completed" /> {{ticket.dateComplete}} </td>
+                {% else %}
+                    <td><img src="/static/img/smiley.jpg" alt="Completed" /> {{ticket.dateComplete}} </td>
+                {%endif%}
             {% else %}
-            <td><input type="checkbox" , value="clicked" , name="c{{ticket.complete}}">Working on it.</td>
 
+                {%if user.id < 4  %}
+                    <td><input type="checkbox" , value="clicked" , name="c{{ticket.ticketno}}"> Working on it.</td>
+                {% else %}
+                    <td>In Progress</td>
+                {%endif%}
             {%endif%}
-            <td style="text-align:center"> {{ticket.email}}</td>
-
-
 
 
 
         </tr>
         {%endfor%}
     </table>    
+    {%if user.id < 4 %}
     <button type="submit" , name="save" , value="save">Save</button>
+    {%endif%}
     <button type="submit" , name="new" , value="new">New Ticket</button>
 
 

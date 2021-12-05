@@ -36,7 +36,7 @@ class Tenant(models.Model):
     email = models.CharField(max_length=40)
     lease = models.CharField(max_length=12000, blank = True)
     address = models.CharField(max_length=100, blank = True)
-    user = models.ForeignKey(User, on_delete = models.PROTECT, default = 1)
+    user = models.ForeignKey(User, on_delete = models.PROTECT, default = 2)
     def __str__(self):
         return (self.firstname+" "+self.lastname)
 
@@ -68,6 +68,7 @@ class Ticket(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete = models.SET_NULL, blank=True,null=True, db_column='Tenant_id')  # Field name made lowercase.
     urgency = models.ForeignKey(Urgency, on_delete = models.SET_NULL, blank=True,null=True, db_column='Urgency_id' )  # Field name made lowercase.
     notes = models.CharField(max_length=200, blank = True)
+    user = models.ForeignKey(User, on_delete = models.PROTECT, default = 1)
     dateComplete = models.CharField( max_length=17, blank = True, default = "Jan 01, 1970" ) #Date issue was handeled 
     def __str__(self):
         return str(self.ticketno)

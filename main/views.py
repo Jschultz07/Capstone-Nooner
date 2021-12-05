@@ -34,8 +34,6 @@ def homes(response):
                 else:
                     each.rented = False
                 each.save()
-
-
     return render(response, "main/properties.html", context)
 
 
@@ -48,42 +46,54 @@ def profile(request):
     return render(request, "main/profile.html", {"ls":ls })
 
 def tickets(response):
-   U = response.user                                               # gives us active user
-   print(f" Main User ***********{U}")
-   
-   T = Tenant.objects.filter(user = U)                 # gives us list of tenants belonging to user
-   print(f" List of tenants belonging to user***********{T}")
+    U = response.user                                    # gives us active user
+    ls = Ticket.objects.all()                 # gives us list of tenants belonging to user
+    T = Tenant.objects.filter(user = U)
 
-   querySet = list(Property.objects.none())
-   #for person in T:
-
-   #    test = Property.tenant.objects.get(tenants = person)
-   #    querySet.append(list(test))                  # gives us list of properties belonging to tenants in list
-   #print(f" List of Property belonging to Those tenants***********{querySet}")
-
-   
-   
-   #ls = Ticket.objects.filter(Property.address == querySet)        # gives us list of tickets that have those properties in t
-   #print(f" List of Tickets belonging to Those properties ***********{ls}")
-   
-  
-   context = {
-         "locations" : Property.objects.all(),
-         "people" : Tenant.objects.all(),
-         #"ls" : Ticket.objects.all(),
-         #"user":U
-         }
-
-   if U.id > 3:
-         context = {
-         "locations" : querySet,
-         "people" : T,
-         #"ls" : ls,
-         #"user":U
-         }         
-
-
-   return render(response, "main/tickets.html", context)
+    if response.method == "POST":
+       if response.POST.get("new"):
+           print("awesome")
+           return HttpResponseRedirect("/new/tickets")
+        
+       elif response.POST.get("save"):       # if not do something else. 
+           
+           for ticket in ls:
+                print(f"ls = {ls}")
+                if response.POST.get("c" + str(ticket.ticketno)) == "clicked":
+                    ticket.complete = True
+                else:                       # only management can remove pets from status.
+                    ticket.complete = False
+                ticket.save()
+           return HttpResponseRedirect("/tickets")
+           
+    else:
+       context = {
+             "locations" : Property.objects.all(),
+             "people" : Tenant.objects.all(),
+             "ls" : Ticket.objects.all(),
+         
+             "user":U
+             }
+       if U.id > 3:
+           queryset =list( Property.objects.none())
+           for each in T:
+               local = Property.objects.filter(tenant = each)
+               queryset.append(list(local))
+           
+           peop = Tenant.objects.filter(user = U)
+           print(f"  user***********{U}")
+           print(f"  List of Tickets belonging to user ***********{ls}")
+           print(f"  List of Tenants belonging to user***********{peop}")
+           print(f"  List of Property ***********{queryset}")
+           context = {
+             "locations" : queryset,
+             "people" : peop,
+             "ls" : ls,
+         
+             "user":U
+             }  
+           
+    return render(response, "main/tickets.html", context)
 
 def tenants(response):
      user = response.user
@@ -159,6 +169,7 @@ def newTenants(response):
                new.save()
 
                return HttpResponseRedirect("/tenants")
+         
     form = CreateNewTenants()
     if form.is_valid():
         form.save()
@@ -196,9 +207,15 @@ def newProperty(response):
 
 def newTickets(response):
     form = CreateNewTickets(response.POST or None)
+    
     if form.is_valid():
         form.save()
-      
+        return HttpResponseRedirect("/tickets")
+
+    else:
+       form = CreateNewTickets()
+       if form.is_valid():
+           form.save() 
 
     return render(response, "main/newTicket.html", {"form":form})
 
