@@ -1,0 +1,49 @@
+{%extends 'main/base.html'%}
+
+{%block title%}
+Tenants Page
+ {% endblock %}
+
+{%block content %}
+<form method="post" action="#">
+    {% csrf_token %}
+    <table>
+        <tr style="text-align:center">
+            <th>Name </th>
+            <th>Pets</th>
+            <th>Phone Number </th>
+            <th>Email </th>
+            <th>Address</th>
+
+        </tr>
+
+        {%for person in ls%}
+
+        <tr>
+            <td> {{person.firstname}} {{person.lastname}}</td>
+
+            {%if person.pets == True%}
+            <td><input type="checkbox" , value="clicked" , name="c{{person.id}}" checked>Has Pets </td>
+            {% else %}
+            <td><input type="checkbox" , value="clicked" , name="c{{person.id}}">No Pets </td>
+
+            {%endif%}
+            <td style="text-align:center"> {{person.phonenumber}}</td>
+            <td style="text-align:center"> {{person.email}}</td>
+            <td> {{person.address}}</td>
+
+
+
+
+
+        </tr>
+        {%endfor%}
+    </table>
+    <button type="submit" , name="save" , value="save">Save</button>
+    <button type="submit" , name="delete" , value="delete">Remove Tenant</button>
+    <button type="submit" , name="new" , value="new">Create New Tenant</button>
+    <input type="text" , name="info">
+
+
+</form>
+    {% endblock %}

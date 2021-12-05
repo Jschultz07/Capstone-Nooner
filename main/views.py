@@ -42,14 +42,78 @@ def profile(request, pk):
     return render(request, "main/profile.html", {"ls":ls })
 
 def tickets(response):
+    ls = Ticket.objects.all()
+    context = {
+         "locations" : Property.objects.all(),
+         "people" : Tenant.objects.all(),
+         "ls" : Ticket.objects.all()
+         }
 
-    return HttpResponse("<h1>All applicable trouble ticket info<h1>")
+    return render(response, "main/tickets.html", context)
 
 def tenants(response):
-    return HttpResponse("<h1>Current user tenant info or all tenant info if manager<h1>")
+     ls = Tenant.objects.all()
+     context = {
+         "locations" : Property.objects.all(),
+         "ls" : Tenant.objects.all()
+         }
+
+     if response.method == "POST":
+        if response.POST.get("new"):                        # if the user selects the new button 
+            return HttpResponseRedirect("/new/tenants")      # redirect to the new property page and allow creation of property. 
+       
+        
+        elif response.POST.get("delete"):                   # if they enter info in txt place and it is the address in list.
+            text = response.POST.get("info")                # remove property from list. 
+            for each in ls:                                 # NOTE removes all instances that the address matches. from list.  
+                target = each.firstname + " " + each.lastname
+                if target == text:
+                    ID = each.id
+                    Tenant.objects.filter(id = ID).delete()
+        
+            ls = Tenant.objects.all()                     # when completed refresh page with updated list. 
+            return render(response, "main/tenants.html", {"ls":ls})
+        
+        
+        elif response.POST.get("save"):                                               # if not do something else. 
+            for each in ls:
+                if response.POST.get("c" + str(each.id)) == "clicked":
+                    each.pets = True
+                else:
+                    each.pets =  False
+                each.save()
+
+
+
+
+     return render(response, "main/tenants.html", context)
 
 def newTenants(response):
-    form = CreateNewTenants(response.POST or None)
+    if response.method == "POST":
+           print("\nnew property POST\n")
+           form = CreateNewTenants(response.POST )#or None)    
+           if form.is_valid():
+               firstN = form.cleaned_data["firstname"]            # put in temp variables
+               lastN = form.cleaned_data["lastname"]      
+               jointN = form.cleaned_data["jointtenantname"]
+               pt = form.cleaned_data["pets"]
+               pr = form.cleaned_data["paidrent"]
+               exp = form.cleaned_data["leaseexpdate"]
+               PN = form.cleaned_data["phonenumber"]      
+               EM = form.cleaned_data["email"]
+               ad = form.cleaned_data["address"]
+               
+
+
+               # using temp variables creeate an instance of Object with values gleaned
+               #
+               new = Tenant(firstname = firstN, lastname = lastN, jointtenantname = jointN, pets = pt, paidrent = pr, leaseexpdate = exp, phonenumber = PN, email = EM, address = ad  ) 
+               
+               # save that input to object list. 
+               new.save()
+
+               return HttpResponseRedirect("/tenants")
+    form = CreateNewTenants()
     if form.is_valid():
         form.save()
     return render(response, "main/newTenant.html", {"form":form})
@@ -83,12 +147,6 @@ def newProperty(response):
 
 #                #this line generates a blank form and passes it into the {} arguements for django to generate for us
 #        #pass the form into the create.html as an arguement. 
-
-
-
-
-
-
 
 def newTickets(response):
     form = CreateNewTickets(response.POST or None)

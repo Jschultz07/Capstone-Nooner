@@ -64,10 +64,13 @@ class Ticket(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete = models.CASCADE, db_column='Tenant_id')  # Field name made lowercase.
     urgency = models.ForeignKey(Urgency, on_delete = models.CASCADE, db_column='Urgency_id' )  # Field name made lowercase.
     notes = models.CharField(max_length=200, blank = True)
+    dateComplete = models.CharField( max_length=17, blank = True, default = "Jan 01, 1970" ) #Date issue was handeled 
     def __str__(self):
         return str(self.ticketno)
     class Meta:
         db_table = 'main_ticket'
+
+
 class Troubleticket(models.Model):
     issue = models.CharField(max_length=500)
     datereceived = models.CharField(db_column='dateReceived', max_length=25, blank = True)  # Field name made lowercase.

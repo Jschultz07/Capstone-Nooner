@@ -4,7 +4,7 @@
 
 {%block content %}
 Create a new Ticket. 
-<form method="post" action="new/tickets">
+<form method="post" action="#">
     {% csrf_token %}
     {{form|crispy}}
     <button type="submit" , name="save">Save New Ticket </button>
