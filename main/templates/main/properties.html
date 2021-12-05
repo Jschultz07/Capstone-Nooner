@@ -9,53 +9,95 @@ Properties Page
     {% csrf_token %}
     <table>
         <tr style="text-align:center">
-            <th>Address</th>
-            <th>Rented</th>
-            
+            {%if user.is_authenticated%}
+            <th> Address</th>
+            <th> Rented</th>
             <th> Bedrooms </th>
             <th> Bathrooms </th>
             <th> Tenant </th>
+            <th> Rent </th>
+            <th> Image </th>
+            {%else%}
+            <th> Address</th>
+            <th> Bedrooms </th>
+            <th> Bathrooms </th>
+            <th> Rent </th>
             <th> Image </th>
 
-
+            {%endif%}
         </tr>
 
         {%for home in ls%}
 
         <tr>
-            <td> {{home.address}}</td>
 
+            {% if user.is_authenticated %}
 
             {% if home.rented == True%}
 
+            <td> {{home.address}}</td>
+            {%if user.id < 4  %}
             <td><input type="checkbox" , value="rented" , name="c{{home.id}}" checked>Rented </td>
-            <td style="text-align:center"> {{home.bedrooms}}</td>
-            <td style="text-align:center"> {{home.bathrooms}}</td>
-            <td> {{home.tenant}}</td>
             {%else%}
-
-            <td><input type="checkbox" , value="rented" , name="c{{home.id}}">Available  </td>
+            <td style="text-align:center">Rented</td>
+            {%endif%}
             <td style="text-align:center"> {{home.bedrooms}}</td>
             <td style="text-align:center"> {{home.bathrooms}}</td>
-            <td  style="text-align:center">Vacant </>
+
+            {%if user.id < 4  %}
+            <td style="text-align:center"> {{home.tenant}}</td>
+            {%else%}
+            <td> Private</td>
+            {%endif%}
+            <td style="text-align:center"> Unavailable </td>
+            <td><img src="/static/img/{{home.id}}.png" alt="N/A" /></td>
+
+            {%else%}
+            <td> {{home.address}}</td>
+            {%if user.id < 4  %}
+            <td><input type="checkbox" , value="rented" , name="c{{home.id}}">Available  </td>
+            {%else%}
+            <td style="text-align:center">Available</td>
+            {%endif%}
+            <td style="text-align:center"> {{home.bedrooms}}</td>
+            <td style="text-align:center"> {{home.bathrooms}}</td>
+            <td style="text-align:center">Vacant </>
+            <td style="text-align:center">${{home.rentprice}} </td>
+            <td><img src="/static/img/{{home.id}}.png" alt="N/A" /></td>
             {%endif%}
 
+            {%else%}
 
+            {% if home.rented == True%}
+            <td> {{home.address}}</td>
+            <td style="text-align:center"> {{home.bedrooms}}</td>
+            <td style="text-align:center"> {{home.bathrooms}}</td>
+            <td style="text-align:center"> Unavailable </td>
+            <td><img src="/static/img/{{home.id}}.png" alt="N/A" /></td>
 
-
-            <td><img src="/static/img/{{home.id}}.png" alt="Property Image" /></td>
-
+            {%else%}
+            <td> {{home.address}}</td>
+            <td style="text-align:center"> {{home.bedrooms}}</td>
+            <td style="text-align:center"> {{home.bathrooms}}</td>
+            <td style="text-align:center">${{home.rentprice}} </td>
+            <td><img src="/static/img/{{home.id}}.png" alt="N/A" /></td>
+            {%endif%}
+            {%endif%}
 
             {%endfor%}
 
 
         </tr>
     </table>
-    <button type="submit" , name="save", value="save">Save</button>
-    <button type="submit" , name="delete", value="delete">Delete Property</button>
-    <button type="submit" , name="new", value="new">Create New Property</button>
-    <input type="text", name="info">
 
+    {%if user.id < 4  %}
+    <button type="submit" , name="new" , value="new">Create New Property</button>   
+    <input type="text" , name="info">
+    <button type="submit" , name="save" , value="save">Save</button>
+    <button type="submit" , name="delete" , value="delete">Delete Property</button>
+
+
+    {%endif%}
 
 </form>
     {% endblock %}

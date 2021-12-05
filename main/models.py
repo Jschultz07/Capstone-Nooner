@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(username='deleted')[0]
 
 class Urgency(models.Model):
     name = models.CharField(max_length=3)
@@ -32,7 +36,7 @@ class Tenant(models.Model):
     email = models.CharField(max_length=40)
     lease = models.CharField(max_length=12000, blank = True)
     address = models.CharField(max_length=100, blank = True)
-    user = models.ForeignKey(User, on_delete = models.CASCADE, default = 1)
+    user = models.ForeignKey(User, on_delete = models.PROTECT, default = 1)
     def __str__(self):
         return (self.firstname+" "+self.lastname)
 
@@ -59,10 +63,10 @@ class Ticket(models.Model):
     date = models.CharField(db_column='Date', max_length=17)  # Field name made lowercase.
     issue = models.CharField(max_length=500)
     complete = models.BooleanField(db_column='Complete', blank = True)  # Field name made lowercase.
-    category = models.ForeignKey(Category, on_delete = models.CASCADE, db_column='Category_id')  # Field name made lowercase.
-    item = models.ForeignKey(Item, on_delete = models.CASCADE, db_column='Item_id')  # Field name made lowercase.
-    tenant = models.ForeignKey(Tenant, on_delete = models.CASCADE, db_column='Tenant_id')  # Field name made lowercase.
-    urgency = models.ForeignKey(Urgency, on_delete = models.CASCADE, db_column='Urgency_id' )  # Field name made lowercase.
+    category = models.ForeignKey(Category, on_delete = models.SET_NULL, blank=True,null=True, db_column='Category_id')  # Field name made lowercase.
+    item = models.ForeignKey(Item, on_delete = models.SET_NULL, blank=True,null=True, db_column='Item_id')  # Field name made lowercase.
+    tenant = models.ForeignKey(Tenant, on_delete = models.SET_NULL, blank=True,null=True, db_column='Tenant_id')  # Field name made lowercase.
+    urgency = models.ForeignKey(Urgency, on_delete = models.SET_NULL, blank=True,null=True, db_column='Urgency_id' )  # Field name made lowercase.
     notes = models.CharField(max_length=200, blank = True)
     dateComplete = models.CharField( max_length=17, blank = True, default = "Jan 01, 1970" ) #Date issue was handeled 
     def __str__(self):

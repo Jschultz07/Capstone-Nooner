@@ -1,11 +1,44 @@
 {%extends 'main/base.html'%}
 
-{%block title%}Tenant Profile Page {% endblock %}
+{%block title%}
+Profile Page
+ {% endblock %}
 
 {%block content %}
+<form method="post" action="#">
+    {% csrf_token %}
+    <table>
 
-<div>
 
-</div>
+        <tr style="text-align:center">
+            <th>Name </th>
+            <th>Pets</th>
+            <th>Phone Number </th>
+            <th>Email </th>
+            <th>Address</th>
 
+        </tr>
+
+        {%for person in ls%}
+
+        <tr>
+     
+            {%if person.pets == True%}
+            <td><input type="checkbox" , value="clicked" , name="c{{person.id}}" checked>Has Pets </td>
+            {% else %}
+            <td><input type="checkbox" , value="clicked" , name="c{{person.id}}">No Pets </td>
+
+            {%endif%}
+            <td style="text-align:center"> {{person.email}}</td>
+
+
+
+
+        </tr>
+        {%endfor%}
+    </table>
+
+
+
+</form>
     {% endblock %}
