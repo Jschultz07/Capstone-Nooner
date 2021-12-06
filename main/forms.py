@@ -6,7 +6,7 @@ from .models import Ticket, Item as Property, Tenant,Urgency, Category
 class CreateNewTickets(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['ticketno','date','issue','complete','notes','item','tenant','urgency','user']
+        fields = ['ticketno','date','category','issue','complete','notes','item','tenant','urgency','user']
     
 class CreateNewTenants(forms.Form):
     firstname = forms.CharField(label = "First Name", max_length = 90)

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse , HttpResponseRedirect
-from .models import Urgency, Propertymanagement, Tenant, Item as Property , Ticket, Troubleticket
+from .models import Urgency, Propertymanagement, Tenant, Item as Property , Ticket, Troubleticket, Category
 from .forms import CreateNewTenants, CreateNewTickets, CreateNewProperty
-
+from django.core.mail import send_mail
 # Create your views here.
 def homes(response):
     context = {
@@ -35,7 +35,6 @@ def homes(response):
                     each.rented = False
                 each.save()
     return render(response, "main/properties.html", context)
-
 
 def home(response):
     return render(response, "main/home.html", {})
@@ -210,6 +209,28 @@ def newTickets(response):
     
     if form.is_valid():
         form.save()
+        message = ""
+        message += "Ticket Number " + response.POST.get("ticketno")
+        message += "\t Property " + response.POST.get("item")
+        message += "\n\n Tenant " + response.POST.get("tenant")
+        catno=  response.POST.get("category")
+        urgno = response.POST.get("urgency")
+        message += "\t Category " + str(Category.objects.get(id=catno))
+        message += " Urgency " + str(Urgency.objects.get(id=urgno))
+        message += "\n\n Situation " + response.POST.get("issue")
+        
+        print(message)
+       
+        fromEmail = response.user.email
+        message_name = str(Category.objects.get(id=catno)) + "issue Urgency Level " +  str(Urgency.objects.get(id=urgno))
+        ## send an email.
+        send_mail(
+            message_name , # subject
+            message , # message
+            'sherry', # from email
+            ['john.schultz@usm.edu'], # to email
+            )
+
         return HttpResponseRedirect("/tickets")
 
     else:

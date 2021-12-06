@@ -127,3 +127,15 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR),'static' )
 
 LOGIN_REDIRECT_URL = "/homes"
 LOGOUT_REDIRECT_URL = "/login"
+
+
+# myaccount.google.com/lesssecureapps
+# accounts.google.com/DisplayUnlockCaptcha
+# myaccounts.google.com/appasswords # most secure gives the specific app a pw seperate from main pw.
+# email settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'JSchultzSolutions@gmail.com'
+EMAIL_HOST_PASSWORD = 'L8dybugs'
+EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
