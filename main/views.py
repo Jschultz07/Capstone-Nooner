@@ -210,24 +210,32 @@ def newTickets(response):
     if form.is_valid():
         form.save()
         message = ""
-        message += "Ticket Number " + response.POST.get("ticketno")
-        message += "\t Property " + response.POST.get("item")
-        message += "\n\n Tenant " + response.POST.get("tenant")
+
+        # get data from POST!
+        #
+        prop = response.POST.get("item")
         catno=  response.POST.get("category")
         urgno = response.POST.get("urgency")
-        message += "\t Category " + str(Category.objects.get(id=catno))
-        message += " Urgency " + str(Urgency.objects.get(id=urgno))
-        message += "\n\n Situation " + response.POST.get("issue")
+        ten = response.POST.get("tenant")
+
+        # Turn that data into strings and add into MSG
+        message +=   "\nTicket Number: \t\t " + str(response.POST.get("ticketno"))
+        message += "\n\nProperty:      \t\t " + str(Property.objects.get(id=prop))
+        message += "\n\nTenant:         \t\t " + str(Tenant.objects.get(id=ten))
+        message +=   "\nCategory:      \t\t " + str(Category.objects.get(id=catno))
+        message +=   "\nUrgency:       \t\t " + str(Urgency.objects.get(id=urgno))
+        message += "\n\nSituation:     \t\t " + response.POST.get("issue")
         
         print(message)
        
         fromEmail = response.user.email
+        print(fromEmail)
         message_name = str(Category.objects.get(id=catno)) + "issue Urgency Level " +  str(Urgency.objects.get(id=urgno))
         ## send an email.
         send_mail(
             message_name , # subject
             message , # message
-            'sherry', # from email
+            fromEmail, # from email
             ['john.schultz@usm.edu'], # to email
             )
 
